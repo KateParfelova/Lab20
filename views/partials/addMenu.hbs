@@ -1,0 +1,41 @@
+<div>
+    <form method="POST" action="/add" onsubmit="return ValidateForm()">
+        <div class="menu">
+            <input type="text" id="name" name="name" placeholder="Имя">
+            <input type="tel" id="number" name="number" placeholder="Номер">
+        </div>
+         <div class="menu">
+            <button id ="BTNsubm" type="submit" disabled>Добавить</button>
+            <button type="button" onclick="{{exit}}">Отмена</button>
+        </div>
+    </form>
+</div>
+<script>
+const nameInput = document.getElementById('name');
+const numberInput = document.getElementById('number');
+const submitBtn = document.getElementById('BTNsubm');
+
+nameInput.addEventListener('input', validateForm);
+numberInput.addEventListener('input', validateForm);
+
+function validateForm() {
+    const name = nameInput.value.trim();
+    const number = numberInput.value.trim();
+
+    const isValid =
+        name !== "" &&
+        isNaN(name) &&
+        validatePhoneNumber(number);
+
+    submitBtn.disabled = !isValid;
+    submitBtn.style.opacity = isValid ? 1 : 0.5;
+}
+
+function validatePhoneNumber(number) {
+    const belarusPattern = /^375\d{9}$/;
+    const russiaPattern = /^7\d{10}$/;
+
+    return belarusPattern.test(number) || russiaPattern.test(number);
+}
+
+</script>

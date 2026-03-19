@@ -1,0 +1,97 @@
+<div>
+    <form action="/update" method="POST">
+
+        <div class="menu">
+            <input type="hidden" name="id" value="{{user.id}}">
+            <input id="inpName" value="{{user.name}}" name="name" type="name" onchange="BlockRemove()" onclick="BlockRemove()" placeholder="Имя" >
+            <input id ='inpName2' value="{{user.number}}" name="number" type="number" onchange="BlockRemove2()" onclick="BlockRemove2()" placeholder="Номер" >
+       </div>
+
+        <div class="menu">
+            <button id="BTNsubm" type="Submit" onmouseenter="ValidateForm()" >Изменить</button>
+            <button id ='delBTN' type="button" onmouseenter="ValidateForm()" onclick="deleteUser('{{user.id}}')">Удалить</button>
+            <button type="button" onclick="{{exit}}">Отказаться</button>
+        </div>
+
+    </form>
+</div>
+<script>
+   let initialName = null;
+let initialNumber = null;
+
+const nameInput = document.getElementById('inpName');
+const numberInput = document.getElementById('inpName2');
+const deleteBtn = document.getElementById('delBTN');
+const submitBtn = document.getElementById('BTNsubm');
+
+
+
+function deleteUser(userId) {
+    fetch(`/delete/${userId}`, { method: 'DELETE' })
+        .then(() => window.location = '/')
+        .catch(err => {
+            console.error('Error:', err);
+            window.location = '/';
+        });
+}
+
+
+
+function checkDeleteBlock() {
+
+    if (initialName === null) initialName = nameInput.value;
+    if (initialNumber === null) initialNumber = numberInput.value;
+
+    const changed =
+        nameInput.value !== initialName ||
+        numberInput.value !== initialNumber;
+
+    deleteBtn.disabled = changed;
+}
+
+
+
+function validateForm() {
+
+    const name = nameInput.value.trim();
+    const number = numberInput.value.trim();
+
+    const isValid =
+        name !== "" &&
+        !isNaN(name) === false &&
+        validatePhoneNumber(number) &&
+        validateName(name);
+
+    submitBtn.disabled = !isValid;
+
+    submitBtn.classList.toggle('disabled-button', !isValid);
+}
+
+
+
+function validatePhoneNumber(number) {
+    const belarusPattern = /^375\d{9}$/;
+    const russiaPattern = /^7\d{10}$/;
+
+    return belarusPattern.test(number) || russiaPattern.test(number);
+}
+
+
+function validateName(name) {
+    const namePattern = /^[a-zA-Zа-яА-ЯёЁ]+$/;
+    return namePattern.test(name);
+}
+
+
+
+nameInput.addEventListener('input', () => {
+    checkDeleteBlock();
+    validateForm();
+});
+
+numberInput.addEventListener('input', () => {
+    checkDeleteBlock();
+    validateForm();
+});
+
+</script>
