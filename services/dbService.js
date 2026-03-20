@@ -15,7 +15,7 @@ function addUser(name, number) {
     const DB = readDB();
 
     const newUser = {
-        id: DB.length ? DB[DB.length - 1].id + 1 : 1,
+        id: DB.length ? +DB[DB.length - 1].id + 1 : 1,
         name,
         number
     };
