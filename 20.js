@@ -6,7 +6,7 @@ const userRoutes = require('./routes/users');
 const app = express();
 
 app.engine('hbs', handlebars.engine);
-app.set('view engine', 'hbs');
+app.set('view engine', 'hbs');//
 
 const publicPath = path.join(__dirname, 'views', 'public');
 app.use(express.static(publicPath));
